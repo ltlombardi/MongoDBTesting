@@ -38,6 +38,7 @@ internal class BasicOperations
         collection.InsertOne(document);
     }
 
+    //TODO: this is not done
     internal static void InsertTyped(MongoClient client, string databaseName, string collectionName)
     {
         var collection = client.GetDatabase(databaseName).GetCollection<BsonDocument>(collectionName);
