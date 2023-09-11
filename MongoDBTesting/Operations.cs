@@ -1,7 +1,10 @@
-﻿using MongoDB.Bson;
+﻿using BenchmarkDotNet.Attributes;
+using Bogus;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Linq;
 
-internal class BasicOperations
+internal class Operations
 {
     internal static void ListDataBases(MongoClient client)
     {
@@ -61,6 +64,16 @@ internal class BasicOperations
         {
             Console.WriteLine(item);
         }
+    }
+
+    public static Customer FirstById(IMongoCollection<Customer> collection, int id)
+    {
+        return collection.Find(Builders<Customer>.Filter.Eq("_id", id)).FirstOrDefault();
+    }
+
+    public static Customer SingleById(IMongoCollection<Customer> collection, int id)
+    {
+        return collection.Find(Builders<Customer>.Filter.Eq("_id", id)).SingleOrDefault();
     }
 }
 

@@ -1,34 +1,22 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using MongoDB.Driver;
+using BenchmarkDotNet.Running;
+using Microsoft.Extensions.Logging;
+using MongoDBTesting;
 
 Console.WriteLine("Hello, World!");
-var client = GetClient();
 
-BasicOperations.ListDataBases(client);
-BasicOperations.ListCollections(client, "test_stuff");
-BasicOperations.InsertUntyped(client, "test_stuff", "items");
-BasicOperations.ListItems(client, "test_stuff", "items");
+var client = MongoDBService.GetClient();
 
+//Operations.ListDataBases(client);
+//Operations.ListCollections(client, "test_stuff");
+//Operations.InsertUntyped(client, "test_stuff", "items");
+//Operations.ListItems(client, "test_stuff", "items");
 
-static MongoClient GetClient()
-{
-    // Remember that your ip must be added to the authorized list.
-    // the password may have been changed   
-    var pass = "sCVOKAhHd1o4E00z";
-    var user = "ltlombardi";
-    var connString = $"mongodb+srv://{user}:{pass}@cluster0.vj4ysgh.mongodb.net/?retryWrites=true&w=majority";
-    var way = 2;
-    if (way == 1)
-    {
-        // Atlas Connect example
-        var settings = MongoClientSettings.FromConnectionString(connString);
-        settings.ServerApi = new ServerApi(ServerApiVersion.V1);
-        return new MongoClient(settings);
-    }
-    else
-    {
-        // This is from MongoDb University course Lesson 2. Both seems to work
-        var mongoURL = new MongoUrl(connString);
-        return new MongoClient(mongoURL);
-    }
-}
+var databaseName = "FirstVsSingle";
+var collectionName = "Test";
+var collection = client.GetDatabase(databaseName).GetCollection<Customer>(collectionName);
+Operations.SingleById(collection,5000);
+Operations.FirstById(collection, 5000);
+//Operations.FirstById(collection,9999);
+
+//BenchmarkRunner.Run<Benchmarks>();
